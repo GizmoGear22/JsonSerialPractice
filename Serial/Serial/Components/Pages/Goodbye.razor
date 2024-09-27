@@ -1,0 +1,33 @@
+﻿@page "/goodbye"
+@rendermode InteractiveAuto
+
+<h3>Goodbye</h3>
+
+<body>
+	@{
+		foreach(var storeLocation in storeList)
+		{
+			<div class="border-2 border-primary">
+				<h4>@storeLocation.location</h4>
+				<h4>@storeLocation.stores</h4>
+			</div>
+		}
+	}
+</body>
+
+@code {
+
+	private List<LocationModel> storeList = new List<LocationModel>();
+
+	private async Task<List<LocationModel>> GetDataFromDB()
+	{
+		var data = await dataHandler.GetStorelocations();
+		return data;
+	}
+
+	protected async override Task OnInitializedAsync()
+	{
+		storeList = await GetDataFromDB();
+	}
+
+}

@@ -1,0 +1,63 @@
+﻿@page "/hello"
+@rendermode InteractiveServer
+
+<h3>Hello</h3>
+
+<form>
+	<div class="location-group">
+		<label for="location" class="form-label">Location</label>
+		<input type="text" id="location" class="form-control" @bind=location @bind:event="oninput"/>
+	</div>
+	<div class="store-location">
+		<label for="store" class="form-label">Store</label>
+		<input type="text" id="store" class="form-control" @bind=storeLocation @bind:event="oninput" />
+	</div>
+
+</form>
+
+<div class="btn-group-vertical">
+	<button class="btn-primary mt-3" @onclick="AddStores">Add Location</button>
+	<button class="btn-secondary mt-3" @onclick="SubmitList">Send List</button>
+</div>
+
+
+<div>
+	<h3>Store Locations</h3>
+	<div class="list-group">
+		@foreach(var loc in storeList)
+		{
+			<h4>@loc</h4>
+		}
+	</div>
+</div>
+
+@code {
+	private string location = string.Empty;
+	private string storeLocation = string.Empty;
+
+	private List<string> storeList = new List<string>();
+
+	private void AddStores()
+	{
+		storeList.Add(storeLocation);
+		storeLocation = "";
+	}
+
+	private string StringifyList()
+	{
+		var jsonList = JsonSerializer.Serialize(storeList);
+		return jsonList;
+	}
+
+	private void SubmitList()
+	{
+		LocationModel newModel = new LocationModel();
+		newModel.location = location;
+		newModel.stores = StringifyList();
+		dataHandler.AddStoreLocation(newModel);
+	}
+
+
+
+
+}
